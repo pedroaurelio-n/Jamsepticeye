@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] HUD hud;
     [SerializeField] Player player;
     
-    public int CurrentCredits { get; private set; }
+    public int GlobalCredits { get; private set; }
 
     void Awake ()
     {
@@ -17,16 +17,16 @@ public class GameManager : MonoBehaviour
 
     void Start ()
     {
-        hud.UpdateCredits(CurrentCredits);
+        hud.UpdateCredits(GlobalCredits);
     }
 
-    public bool TryModifyCredits (int value)
+    public bool TryModifyCredits (int value, bool passive = false)
     {
-        if (value < 0 && Mathf.Abs(value) > CurrentCredits)
+        if (value < 0 && Mathf.Abs(value) > GlobalCredits)
             return false;
         
-        CurrentCredits += value;
-        hud.UpdateCredits(CurrentCredits);
+        GlobalCredits += value;
+        hud.UpdateCredits(GlobalCredits);
         return true;
     }
 

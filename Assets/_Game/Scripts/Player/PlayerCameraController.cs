@@ -6,6 +6,7 @@ public class PlayerCameraController : MonoBehaviour
 {
     [SerializeField] CinemachineCamera cinemachineCamera;
     [SerializeField] CinemachineCameraOffset cinemachineCameraOffset;
+    [SerializeField] CinemachineInputAxisController cinemachineInputAxisController;
 
     [Header("Movement Tilt Settings")]
     [SerializeField] float movementTiltAngle = 3f;
@@ -59,6 +60,11 @@ public class PlayerCameraController : MonoBehaviour
     public void Initialize ()
     {
         cinemachineCamera.enabled = true;
+    }
+
+    public void SetCameraMovementActive (bool active)
+    {
+        cinemachineInputAxisController.enabled = active;
     }
 
     public void ApplyDashFovMultiplier ()

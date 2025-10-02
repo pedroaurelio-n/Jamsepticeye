@@ -48,6 +48,8 @@ public class PlayerInputManager : MonoBehaviour
 
     void Move ()
     {
+        _cameraController.SetCameraMovementActive(_player.CanMove);
+        
         if (!_player.CanMove)
             return;
         
@@ -65,6 +67,9 @@ public class PlayerInputManager : MonoBehaviour
 
     void Act ()
     {
+        if (_controls.Gameplay.Interact.triggered)
+            _player.InteractionController.Interact();
+        
         if (!_player.CanAct)
             return;
     }

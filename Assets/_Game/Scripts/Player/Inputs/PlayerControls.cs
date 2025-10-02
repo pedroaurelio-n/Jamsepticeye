@@ -82,15 +82,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Skill2"",
-                    ""type"": ""Button"",
-                    ""id"": ""ac94b6a1-cba5-45eb-9907-236dc107c824"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Skill3"",
                     ""type"": ""Button"",
                     ""id"": ""67de4d4d-ac29-4525-9e5e-8ad4ee49aced"",
@@ -231,17 +222,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f9554fc3-f092-47bd-819c-6eb3c5d4673f"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";KBM"",
-                    ""action"": ""Skill2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""8d260fa0-f853-42c4-83c5-9c6fdd8ff76e"",
                     ""path"": ""<Keyboard>/v"",
                     ""interactions"": """",
@@ -254,7 +234,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""48d9f840-d0bd-4a1a-a5ca-243634576004"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";KBM"",
@@ -303,7 +283,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Gameplay_MovementSkill = m_Gameplay.FindAction("MovementSkill", throwIfNotFound: true);
         m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
         m_Gameplay_Skill1 = m_Gameplay.FindAction("Skill1", throwIfNotFound: true);
-        m_Gameplay_Skill2 = m_Gameplay.FindAction("Skill2", throwIfNotFound: true);
         m_Gameplay_Skill3 = m_Gameplay.FindAction("Skill3", throwIfNotFound: true);
         m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
         m_Gameplay_Reload = m_Gameplay.FindAction("Reload", throwIfNotFound: true);
@@ -379,7 +358,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_MovementSkill;
     private readonly InputAction m_Gameplay_Attack;
     private readonly InputAction m_Gameplay_Skill1;
-    private readonly InputAction m_Gameplay_Skill2;
     private readonly InputAction m_Gameplay_Skill3;
     private readonly InputAction m_Gameplay_Interact;
     private readonly InputAction m_Gameplay_Reload;
@@ -393,7 +371,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @MovementSkill => m_Wrapper.m_Gameplay_MovementSkill;
         public InputAction @Attack => m_Wrapper.m_Gameplay_Attack;
         public InputAction @Skill1 => m_Wrapper.m_Gameplay_Skill1;
-        public InputAction @Skill2 => m_Wrapper.m_Gameplay_Skill2;
         public InputAction @Skill3 => m_Wrapper.m_Gameplay_Skill3;
         public InputAction @Interact => m_Wrapper.m_Gameplay_Interact;
         public InputAction @Reload => m_Wrapper.m_Gameplay_Reload;
@@ -424,9 +401,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Skill1.started += instance.OnSkill1;
             @Skill1.performed += instance.OnSkill1;
             @Skill1.canceled += instance.OnSkill1;
-            @Skill2.started += instance.OnSkill2;
-            @Skill2.performed += instance.OnSkill2;
-            @Skill2.canceled += instance.OnSkill2;
             @Skill3.started += instance.OnSkill3;
             @Skill3.performed += instance.OnSkill3;
             @Skill3.canceled += instance.OnSkill3;
@@ -458,9 +432,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Skill1.started -= instance.OnSkill1;
             @Skill1.performed -= instance.OnSkill1;
             @Skill1.canceled -= instance.OnSkill1;
-            @Skill2.started -= instance.OnSkill2;
-            @Skill2.performed -= instance.OnSkill2;
-            @Skill2.canceled -= instance.OnSkill2;
             @Skill3.started -= instance.OnSkill3;
             @Skill3.performed -= instance.OnSkill3;
             @Skill3.canceled -= instance.OnSkill3;
@@ -504,7 +475,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnMovementSkill(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnSkill1(InputAction.CallbackContext context);
-        void OnSkill2(InputAction.CallbackContext context);
         void OnSkill3(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);

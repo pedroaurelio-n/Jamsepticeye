@@ -83,6 +83,9 @@ public partial class PlayerCharacterController
 
     void EvaluateJump (ref Vector3 currentVelocity, float deltaTime)
     {
+        if (maxJumpCount == 0)
+            return;
+        
         // Handle jumping
         _jumpedThisFrame = false;
         _timeSinceJumpRequested += deltaTime;

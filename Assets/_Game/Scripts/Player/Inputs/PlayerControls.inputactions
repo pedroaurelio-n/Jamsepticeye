@@ -60,15 +60,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Skill2",
-                    "type": "Button",
-                    "id": "ac94b6a1-cba5-45eb-9907-236dc107c824",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Skill3",
                     "type": "Button",
                     "id": "67de4d4d-ac29-4525-9e5e-8ad4ee49aced",
@@ -209,17 +200,6 @@
                 },
                 {
                     "name": "",
-                    "id": "f9554fc3-f092-47bd-819c-6eb3c5d4673f",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KBM",
-                    "action": "Skill2",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "8d260fa0-f853-42c4-83c5-9c6fdd8ff76e",
                     "path": "<Keyboard>/v",
                     "interactions": "",
@@ -232,7 +212,7 @@
                 {
                     "name": "",
                     "id": "48d9f840-d0bd-4a1a-a5ca-243634576004",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": ";KBM",

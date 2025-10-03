@@ -2,32 +2,29 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShopPanelUI : MonoBehaviour
+public class GlobalShopPanelUI : MonoBehaviour
 {
     public event Action OnUpgradeBought;
     
     [SerializeField] Transform entryContainer;
-    [SerializeField] ShopUpgradeEntryUI upgradeEntryPrefab;
+    [SerializeField] GlobalUpgradeEntryUI upgradeEntryPrefab;
 
-    List<ShopUpgradeEntryUI> _activeEntries = new();
-    PCUpgrades _pcUpgrades;
+    List<GlobalUpgradeEntryUI> _activeEntries = new();
 
-    public void Setup (PCUpgrades pcUpgrades)
+    public void Setup ()
     {
-        _pcUpgrades = pcUpgrades;
-
         CreateEntries();
         UpdateEntries();
     }
 
     void CreateEntries ()
     {
-        int total = _pcUpgrades.AvailableUpgrades.Count;
+        int total = GameManager.Instance.GlobalUpgradeManager.AvailableUpgrades.Count;
         int missing = total - _activeEntries.Count;
 
         for (int i = 0; i < missing; i++)
         {
-            ShopUpgradeEntryUI entry = Instantiate(upgradeEntryPrefab, entryContainer);
+            GlobalUpgradeEntryUI entry = Instantiate(upgradeEntryPrefab, entryContainer);
             _activeEntries.Add(entry);
             entry.OnUpgradeBought += HandleUpgradeBought;
         }
@@ -38,7 +35,7 @@ public class ShopPanelUI : MonoBehaviour
         for (int i = 0; i < _activeEntries.Count; i++)
         {
             _activeEntries[i].gameObject.SetActive(true);
-            _activeEntries[i].Setup(_pcUpgrades, _pcUpgrades.AvailableUpgrades[i].PCUpgradeData.Type);
+            _activeEntries[i].Setup(GameManager.Instance.GlobalUpgradeManager.AvailableUpgrades[i].UpgradeData.Type);
         }
     }
 

@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e271082d38024b42a87adfd87e877634, type: 3}
-  m_Name: SpeedUpgrade
+  m_Name: CreditsStorageUpgrade
   m_EditorClassIdentifier: 
-  <UpgradeName>k__BackingField: Increase Speed
-  <Type>k__BackingField: 0
-  <BaseCost>k__BackingField: 10
-  <Value>k__BackingField: 0.25
-  <Multiplier>k__BackingField: 1.5
-  <MaxLimit>k__BackingField: 20
+  <UpgradeName>k__BackingField: Increase Storage
+  <Type>k__BackingField: 4
+  <BaseCost>k__BackingField: 100
+  <Value>k__BackingField: 50
+  <LocalMultiplier>k__BackingField: 1.7
+  <PCMultiplier>k__BackingField: 1.3
+  <MaxLimit>k__BackingField: 15

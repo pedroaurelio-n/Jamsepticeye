@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e271082d38024b42a87adfd87e877634, type: 3}
-  m_Name: DeathValueUpgrade
+  m_Script: {fileID: 11500000, guid: 0faed6455c1f4475a6ddc1b9dee9943f, type: 3}
+  m_Name: CostReduceUpgrade
   m_EditorClassIdentifier: 
-  <UpgradeName>k__BackingField: Increase Death Value
-  <Type>k__BackingField: 3
-  <BaseCost>k__BackingField: 250
-  <Value>k__BackingField: 1
+  <UpgradeName>k__BackingField: Reduce Prices
+  <Type>k__BackingField: 0
+  <BaseCost>k__BackingField: 4000
+  <Value>k__BackingField: 0.02
   <Multiplier>k__BackingField: 2
-  <MaxLimit>k__BackingField: 9
+  <MaxLimit>k__BackingField: 15

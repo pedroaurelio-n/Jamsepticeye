@@ -16,6 +16,7 @@ public class MinigameManager : MonoBehaviour
 
     public bool IsControlled { get; private set; }
     public bool AutoMove { get; private set; }
+    public int PCIndex => _currentPC.Index;
 
     MinigameController _currentPlayer;
     PCController _currentPC;
@@ -57,7 +58,12 @@ public class MinigameManager : MonoBehaviour
     {
         deathParticles.transform.position = _currentPlayer.transform.position;
         deathParticles.Play();
-        _currentPC.AddCredits(Mathf.RoundToInt((PlayerBaseDeathValue + _deathValueAddUpgrade) * spikeValue));
+
+        float value = (PlayerBaseDeathValue + _deathValueAddUpgrade) * spikeValue;
+        if (IsControlled && GameManager.Instance.GlobalUpgradeManager.ManualPlayMultiplier > 1f)
+            value *= GameManager.Instance.GlobalUpgradeManager.ManualPlayMultiplier;
+        _currentPC.AddCredits(Mathf.RoundToInt(value));
+        
         Destroy(_currentPlayer.gameObject);
         _currentPlayer = null;
         
@@ -83,5 +89,10 @@ public class MinigameManager : MonoBehaviour
     public void UpgradeDeathValue (float amount)
     {
         _deathValueAddUpgrade += amount;
+    }
+
+    public void UpgradeCreditsStorage (float amount)
+    {
+        _currentPC.UpgradeCreditsStorage((int)amount);
     }
 }

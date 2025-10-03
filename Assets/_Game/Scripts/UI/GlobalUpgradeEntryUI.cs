@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ShopUpgradeEntryUI : MonoBehaviour
+public class GlobalUpgradeEntryUI : MonoBehaviour
 {
     public event Action OnUpgradeBought;
     
@@ -12,12 +12,10 @@ public class ShopUpgradeEntryUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI costText;
     [SerializeField] Button buyButton;
     
-    PCUpgrades _pcUpgrades;
-    PCUpgradeType _type;
+    GlobalUpgradeType _type;
 
-    public void Setup (PCUpgrades pcUpgrades, PCUpgradeType type)
+    public void Setup (GlobalUpgradeType type)
     {
-        _pcUpgrades = pcUpgrades;
         _type = type;
         
         buyButton.onClick.RemoveAllListeners();
@@ -30,7 +28,7 @@ public class ShopUpgradeEntryUI : MonoBehaviour
 
     void SyncEntryUI ()
     {
-        PCUpgradeEntry entry = _pcUpgrades.GetEntryByType(_type);
+        GlobalUpgradeEntry entry = GameManager.Instance.GlobalUpgradeManager.GetEntryByType(_type);
         if (entry == null)
         {
             nameText.text = "N/A";
@@ -40,14 +38,13 @@ public class ShopUpgradeEntryUI : MonoBehaviour
             return;
         }
         
-        PCUpgradeData data = entry.PCUpgradeData;
+        GlobalUpgradeData data = entry.UpgradeData;
         int level = entry.CurrentIndex;
         
         nameText.text = data.UpgradeName;
         levelText.text = $"Lvl. {level}";
         
-        int nextCost = _pcUpgrades.GetNextCost(_type, _pcUpgrades.PCIndex);
-
+        int nextCost = GameManager.Instance.GlobalUpgradeManager.GetNextCost(_type);
         if (nextCost < 0 || level + 1 > data.MaxLimit)
         {
             costText.text = "MAX";
@@ -61,7 +58,7 @@ public class ShopUpgradeEntryUI : MonoBehaviour
 
     void OnBuyButtonClicked ()
     {
-        if (_pcUpgrades.BuyNextUpgrade(_type))
+        if (GameManager.Instance.GlobalUpgradeManager.BuyNextUpgrade(_type))
         {
             SyncEntryUI();
             OnUpgradeBought?.Invoke();

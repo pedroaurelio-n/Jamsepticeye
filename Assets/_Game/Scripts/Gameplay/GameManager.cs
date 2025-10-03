@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    
+    [field: SerializeField] public GlobalUpgradeManager GlobalUpgradeManager { get; private set; }
 
     [SerializeField] HUD hud;
     [SerializeField] Player player;
+    [SerializeField] PCList pcList;
     
     public int GlobalCredits { get; private set; }
+    public int CurrentPCCount { get; private set; } = 1;
 
     void Awake ()
     {
@@ -25,6 +30,9 @@ public class GameManager : MonoBehaviour
     {
         if (Keyboard.current.digit0Key.wasPressedThisFrame)
             TryModifyCredits(+100);
+        
+        if (Keyboard.current.digit9Key.wasPressedThisFrame)
+            BuyNewPC();
     }
 
     public bool TryModifyCredits (int value, bool passive = false)
@@ -37,6 +45,12 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    public void BuyNewPC ()
+    {
+        CurrentPCCount++;
+        pcList.ActivateNewPC();
+    }
+
     public void SetInteractHudActive (bool active)
     {
         hud.SetInteractIndicator(active);
@@ -45,5 +59,28 @@ public class GameManager : MonoBehaviour
     public void SetPlayerState (bool interacting)
     {
         player.SetInteractionMode(interacting);
+    }
+
+    public void StartAutoClaimRoutine ()
+    {
+        StartCoroutine(AutoClaimRoutine());
+    }
+    
+    IEnumerator AutoClaimRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(5f);
+            
+            if (!GlobalUpgradeManager.AutoClaimEnabled)
+                continue;
+            
+            foreach (PCController pc in pcList.ActivePcs)
+            {
+                int claimed = pc.RedeemCredits();
+                if (claimed > 0)
+                    TryModifyCredits(claimed, passive: true);
+            }
+        }
     }
 }

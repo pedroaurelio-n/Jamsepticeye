@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e271082d38024b42a87adfd87e877634, type: 3}
-  m_Name: SpawnDelayUpgrade
+  m_Name: SpeedUpgrade
   m_EditorClassIdentifier: 
-  <UpgradeName>k__BackingField: Decrease Spawn
-  <Type>k__BackingField: 1
-  <BaseCost>k__BackingField: 15
-  <Value>k__BackingField: 0.1
-  <Multiplier>k__BackingField: 1.6
-  <MaxLimit>k__BackingField: 25
+  <UpgradeName>k__BackingField: Increase Speed
+  <Type>k__BackingField: 0
+  <BaseCost>k__BackingField: 10
+  <Value>k__BackingField: 0.25
+  <LocalMultiplier>k__BackingField: 1.5
+  <PCMultiplier>k__BackingField: 1
+  <MaxLimit>k__BackingField: 20

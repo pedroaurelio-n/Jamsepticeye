@@ -5,7 +5,9 @@ using UnityEngine.Serialization;
 
 public class PCUpgrades : MonoBehaviour
 {
-    [field: SerializeField] public List<UpgradeEntry> AvailableUpgrades { get; private set; }
+    [field: SerializeField] public List<PCUpgradeEntry> AvailableUpgrades { get; private set; }
+
+    public int PCIndex => _minigameManager.PCIndex;
     
     MinigameManager _minigameManager;
 
@@ -14,25 +16,25 @@ public class PCUpgrades : MonoBehaviour
         _minigameManager = minigameManager;
     }
 
-    public UpgradeEntry GetEntryByType (UpgradeType type)
+    public PCUpgradeEntry GetEntryByType (PCUpgradeType type)
     {
-        return AvailableUpgrades.FirstOrDefault(x => x.UpgradeData.Type == type);
+        return AvailableUpgrades.FirstOrDefault(x => x.PCUpgradeData.Type == type);
     }
 
-    public bool BuyNextUpgrade(UpgradeType type)
+    public bool BuyNextUpgrade(PCUpgradeType type)
     {
-        UpgradeEntry entry = GetEntryByType(type);
+        PCUpgradeEntry entry = GetEntryByType(type);
         if (entry == null)
             return false;
         
-        UpgradeData data = entry.UpgradeData;
+        PCUpgradeData data = entry.PCUpgradeData;
         int index = entry.CurrentIndex;
         
         float currentValue = GetCurrentValue(entry);
         if (currentValue >= data.MaxLimit)
             return false;
         
-        int cost = Mathf.RoundToInt(data.BaseCost * Mathf.Pow(data.Multiplier, index));
+        int cost = GetNextCost(type, _minigameManager.PCIndex);
         if (!GameManager.Instance.TryModifyCredits(-cost))
             return false;
         
@@ -41,37 +43,46 @@ public class PCUpgrades : MonoBehaviour
         return true;
     }
     
-    void ApplyUpgrade(UpgradeData data)
+    void ApplyUpgrade(PCUpgradeData data)
     {
         switch (data.Type)
         {
-            case UpgradeType.Speed:
+            case PCUpgradeType.Speed:
                 _minigameManager.UpgradeSpeed(data.Value);
                 break;
-            case UpgradeType.SpawnDelay:
+            case PCUpgradeType.SpawnDelay:
                 _minigameManager.UpgradeSpawnDelay(data.Value);
                 break;
-            case UpgradeType.AutoMove:
+            case PCUpgradeType.AutoMove:
                 _minigameManager.EnableAutoMove();
                 break;
-            case UpgradeType.DeathValue:
+            case PCUpgradeType.DeathValue:
                 _minigameManager.UpgradeDeathValue(data.Value);
+                break;
+            case PCUpgradeType.CreditsStorage:
+                _minigameManager.UpgradeCreditsStorage(data.Value);
                 break;
         }
     }
     
-    float GetCurrentValue(UpgradeEntry entry)
+    float GetCurrentValue(PCUpgradeEntry entry)
     {
-        UpgradeData data = entry.UpgradeData;
+        PCUpgradeData data = entry.PCUpgradeData;
         return data.Value * entry.CurrentIndex;
     }
     
-    public int GetNextCost(UpgradeType type)
+    public int GetNextCost (PCUpgradeType type, int pcIndex)
     {
-        UpgradeEntry entry = GetEntryByType(type);
+        PCUpgradeEntry entry = GetEntryByType(type);
         if (entry == null)
             return -1;
         
-        return Mathf.RoundToInt(entry.UpgradeData.BaseCost * Mathf.Pow(entry.UpgradeData.Multiplier, entry.CurrentIndex));
+        PCUpgradeData data = entry.PCUpgradeData;
+        
+        float localCost = data.BaseCost * Mathf.Pow(data.LocalMultiplier, entry.CurrentIndex);
+        float pcScaling = Mathf.Pow(data.PCMultiplier, pcIndex);
+        float discount = 1f - GameManager.Instance.GlobalUpgradeManager.CostReducerPercent;
+        
+        return Mathf.RoundToInt(localCost * pcScaling * discount);
     }
 }

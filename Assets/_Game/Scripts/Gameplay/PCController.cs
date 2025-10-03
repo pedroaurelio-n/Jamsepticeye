@@ -2,6 +2,9 @@
 
 public class PCController : MonoBehaviour, IInteractable
 {
+    [SerializeField] bool starting;
+    [SerializeField] int BaseCreditsStorage;
+    
     [Header("References")]
     [SerializeField] MeshRenderer screenRenderer;
     [SerializeField] Material screenMaterialTemplate;
@@ -11,18 +14,26 @@ public class PCController : MonoBehaviour, IInteractable
     [SerializeField] ShopPanelUI shopPanelUI;
     
     public int LocalCredits { get; private set; }
+    public bool Initialized { get; private set; }
+    public int Index => _pcIndex;
 
     MinigameManager _minigameInstance;
     RenderTexture _renderTexture;
 
     bool _isBeingInteracted;
+    int _pcIndex = 0;
+    int _creditsStorageUpgrade;
 
-    void Start ()
+    public void Initialize (int index = 0)
     {
+        _pcIndex = index;
+        
         _renderTexture = new RenderTexture(128, 128, 16);
         _renderTexture.Create();
+
+        Vector3 offset = GetMinigameOffset();
         
-        _minigameInstance = Instantiate(minigamePrefab, Vector3.zero, Quaternion.identity);
+        _minigameInstance = Instantiate(minigamePrefab, offset, Quaternion.identity);
         _minigameInstance.gameObject.SetActive(true);
         _minigameInstance.Setup(this);
         upgrades.Setup(_minigameInstance);
@@ -39,6 +50,14 @@ public class PCController : MonoBehaviour, IInteractable
             mainTexture = _renderTexture
         };
         screenRenderer.material = screenMat;
+        
+        Initialized = true;
+    }
+
+    void Start ()
+    {
+        if (starting)
+            Initialize();
     }
 
     public void Interact ()
@@ -52,14 +71,30 @@ public class PCController : MonoBehaviour, IInteractable
         _isBeingInteracted = true;
         Cursor.lockState = CursorLockMode.Confined;
         
-        shopPanelUI.Setup(upgrades);
         shopPanelUI.gameObject.SetActive(true);
         shopPanelUI.Setup(upgrades);
+        Invoke(nameof(LateSetup), 0.1f);
     }
 
-    public void AddCredits (int amount)
+    void LateSetup ()
     {
+        shopPanelUI.gameObject.SetActive(false);
+        shopPanelUI.gameObject.SetActive(true);
+    }
+
+    public bool AddCredits (int amount)
+    {
+        if (LocalCredits + amount >= BaseCreditsStorage + _creditsStorageUpgrade)
+            return false;
+        
         LocalCredits += amount;
+        LocalCredits = Mathf.Clamp(LocalCredits, 0, BaseCreditsStorage + _creditsStorageUpgrade);
+        return true;
+    }
+
+    public void UpgradeCreditsStorage (int amount)
+    {
+        _creditsStorageUpgrade += amount;
     }
 
     public int RedeemCredits ()
@@ -104,5 +139,11 @@ public class PCController : MonoBehaviour, IInteractable
         {
             Destroy(_minigameInstance);
         }
+    }
+    
+    Vector3 GetMinigameOffset ()
+    {
+        Vector3 offset = new(_pcIndex * 15f, 0, 0);
+        return offset;
     }
 }

@@ -5817,7 +5817,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf1a84959bc1427192582e8698a80607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Value>k__BackingField: 1
+  <Multiplier>k__BackingField: 1
 --- !u!58 &6879379577964022686
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6086,6 +6086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <PlayerBaseSpeed>k__BackingField: 2
   <PlayerBaseSpawnDelay>k__BackingField: 3
+  <PlayerBaseDeathValue>k__BackingField: 1
   playerPrefab: {fileID: 5239060353931178796, guid: e6f30f4bd0c1ee54f875ab1c7a92e464, type: 3}
   spawnPoint: {fileID: 5969917796404395506}
   spikes:

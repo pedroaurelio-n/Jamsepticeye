@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,12 @@ public class GameManager : MonoBehaviour
         hud.UpdateCredits(GlobalCredits);
     }
 
+    void Update ()
+    {
+        if (Keyboard.current.digit0Key.wasPressedThisFrame)
+            TryModifyCredits(+100);
+    }
+
     public bool TryModifyCredits (int value, bool passive = false)
     {
         if (value < 0 && Mathf.Abs(value) > GlobalCredits)
@@ -34,15 +41,9 @@ public class GameManager : MonoBehaviour
     {
         hud.SetInteractIndicator(active);
     }
-    
-    public void SetExitHudActive (bool active)
-    {
-        hud.SetExitIndicator(active);
-    }
 
     public void SetPlayerState (bool interacting)
     {
-        player.CanAct = !interacting;
-        player.CanMove = !interacting;
+        player.SetInteractionMode(interacting);
     }
 }

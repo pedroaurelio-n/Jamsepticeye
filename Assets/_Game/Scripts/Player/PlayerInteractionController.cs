@@ -4,40 +4,40 @@ using UnityEngine;
 public class PlayerInteractionController : MonoBehaviour
 {
     Player _player;
-    bool _interact;
+    IInteractable _currentInteractable;
 
     public void Initialize (Player player)
     {
         _player = player;
     }
 
-    public void Interact () => _interact = true;
+    public void TryInteract (bool exit)
+    {
+        if (_currentInteractable == null)
+            return;
+        
+        if (exit)
+        {
+            _currentInteractable.Exit();
+            return;
+        }
+        
+        if (_player.CanAct)
+        {
+            _currentInteractable.Interact();
+            GameManager.Instance.SetInteractHudActive(false);
+        }
+        else
+            _currentInteractable.Exit();
+    }
 
-    void OnTriggerStay (Collider other)
+    void OnTriggerEnter (Collider other)
     {
         if (!other.TryGetComponent(out IInteractable interactable))
             return;
-
-        if (_player.CanAct)
-        {
-            GameManager.Instance.SetInteractHudActive(true);
-            GameManager.Instance.SetExitHudActive(false);
-        }
-        else
-        {
-            GameManager.Instance.SetInteractHudActive(false);
-            GameManager.Instance.SetExitHudActive(true);
-        }
-
-        if (!_interact)
-            return;
-
-        _interact = false;
         
-        if (_player.CanAct)
-            interactable.Interact();
-        else
-            interactable.Exit();
+        _currentInteractable = interactable;
+        GameManager.Instance.SetInteractHudActive(true);
     }
 
     void OnTriggerExit (Collider other)
@@ -45,7 +45,10 @@ public class PlayerInteractionController : MonoBehaviour
         if (!other.TryGetComponent(out IInteractable interactable))
             return;
 
+        if (_currentInteractable != interactable)
+            return;
+        
+        _currentInteractable = null;
         GameManager.Instance.SetInteractHudActive(false);
-        GameManager.Instance.SetExitHudActive(false);
     }
 }

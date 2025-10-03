@@ -14,6 +14,7 @@ public class MinigameController : MonoBehaviour
 
     float _speed;
     bool _autoMove;
+    Vector2 _input;
     Vector2 _moveInput;
     bool _jumpInput;
 
@@ -31,20 +32,24 @@ public class MinigameController : MonoBehaviour
 
     void Update ()
     {
+        _moveInput = Vector2.zero;
+        
         if (_manager.IsControlled)
         {
-            _moveInput = Vector2.zero;
+            _input = Vector2.zero;
+            
+            if (Keyboard.current.leftArrowKey.isPressed || Keyboard.current.aKey.isPressed)
+                _input.x = -1;
+            else if (Keyboard.current.rightArrowKey.isPressed || Keyboard.current.dKey.isPressed)
+                _input.x = 1;
 
-            if (Keyboard.current != null)
-            {
-                if (Keyboard.current.leftArrowKey.isPressed || Keyboard.current.aKey.isPressed)
-                    _moveInput.x = -1;
-                else if (Keyboard.current.rightArrowKey.isPressed || Keyboard.current.dKey.isPressed)
-                    _moveInput.x = 1;
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+                _jumpInput = true;
 
-                if (Keyboard.current.spaceKey.wasPressedThisFrame)
-                    _jumpInput = true;
-            }
+            if (_input == Vector2.zero && _autoMove)
+                _moveInput = Vector2.right;
+            else
+                _moveInput = _input;
         }
         else if (_autoMove)
         {
@@ -82,7 +87,7 @@ public class MinigameController : MonoBehaviour
     {
         if (other.TryGetComponent(out Spike spike))
         {
-            _manager.OnPlayerDeath(spike.Value);
+            _manager.OnPlayerDeath(spike.Multiplier);
         }
     }
     

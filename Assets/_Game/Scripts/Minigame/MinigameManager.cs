@@ -5,6 +5,7 @@ public class MinigameManager : MonoBehaviour
 {
     [field: SerializeField] public float PlayerBaseSpeed { get; private set; }
     [field: SerializeField] public float PlayerBaseSpawnDelay { get; private set; }
+    [field: SerializeField] public float PlayerBaseDeathValue { get; private set; }
     
     [Header("References")]
     [SerializeField] MinigameController playerPrefab;
@@ -21,6 +22,7 @@ public class MinigameManager : MonoBehaviour
 
     float _speedAddUpgrade;
     float _spawnDelayDecreaseUpgrade;
+    float _deathValueAddUpgrade;
 
     void Start ()
     {
@@ -38,18 +40,26 @@ public class MinigameManager : MonoBehaviour
         IsControlled = value;
     }
 
+    public void UpdatePlayer ()
+    {
+        if (_currentPlayer == null)
+            return;
+        _currentPlayer.Init(this, PlayerBaseSpeed + _speedAddUpgrade, AutoMove);
+    }
+
     void SpawnPlayer ()
     {
         _currentPlayer = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity, transform);
         _currentPlayer.Init(this, PlayerBaseSpeed + _speedAddUpgrade, AutoMove);
     }
     
-    public void OnPlayerDeath (int spikeValue)
+    public void OnPlayerDeath (float spikeValue)
     {
         deathParticles.transform.position = _currentPlayer.transform.position;
         deathParticles.Play();
-        _currentPC.AddCredits(spikeValue);
+        _currentPC.AddCredits(Mathf.RoundToInt((PlayerBaseDeathValue + _deathValueAddUpgrade) * spikeValue));
         Destroy(_currentPlayer.gameObject);
+        _currentPlayer = null;
         
         minigameHud.UpdateLocalCredits(_currentPC.LocalCredits);
         minigameHud.StartCountdown(PlayerBaseSpawnDelay - _spawnDelayDecreaseUpgrade, SpawnPlayer);
@@ -68,5 +78,10 @@ public class MinigameManager : MonoBehaviour
     public void EnableAutoMove ()
     {
         AutoMove = true;
+    }
+    
+    public void UpgradeDeathValue (float amount)
+    {
+        _deathValueAddUpgrade += amount;
     }
 }

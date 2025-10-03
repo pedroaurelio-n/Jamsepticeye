@@ -10,12 +10,6 @@ public class Player : MonoBehaviour
     public bool CanMove { get; set; }
     public bool CanAct { get; set; }
 
-    //TODO pedro: maybe isolate in different class
-    [Header("Knockback Settings")]
-    [SerializeField] float knockbackForce;
-    [SerializeField] float knockbackUpBias;
-    [SerializeField] bool resetKnockbackY;
-
     void Start ()
     {
         CanMove = true;
@@ -24,5 +18,12 @@ public class Player : MonoBehaviour
         InteractionController.Initialize(this);
         
         Cursor.lockState = CursorLockMode.Locked;
+    }
+    
+    public void SetInteractionMode(bool active)
+    {
+        CanMove = !active;
+        CanAct = !active;
+        CameraController.SetCameraMovementActive(!active);
     }
 }

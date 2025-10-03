@@ -68,7 +68,7 @@ public class PlayerInputManager : MonoBehaviour
     void Act ()
     {
         if (_controls.Gameplay.Interact.triggered)
-            _player.InteractionController.Interact();
+            _player.InteractionController.TryInteract(false);
         
         if (!_player.CanAct)
             return;

@@ -8,7 +8,8 @@ public enum GlobalUpgradeType
     ManualPlayBoost = 2,
     GlobalSpeed = 3,
     GlobalSpawnDelay = 4,
-    NewPC = 5
+    NewPC = 5,
+    Salvation = 6
 }
 
 [Serializable]
@@ -22,6 +23,8 @@ public class GlobalUpgradeEntry
 public class GlobalUpgradeData : ScriptableObject
 {
     [field: SerializeField] public string UpgradeName { get; private set; }
+    [field: SerializeField] public string UpgradeDescription { get; private set; }
+    [field: SerializeField] public string ParanoiaDescription { get; private set; }
     [field: SerializeField] public GlobalUpgradeType Type { get; private set; }
     [field: SerializeField] public int BaseCost { get; private set; }
     [field: SerializeField] public float Value { get; private set; }

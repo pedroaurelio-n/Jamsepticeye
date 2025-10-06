@@ -1,4 +1,5 @@
 using System.Collections;
+using PedroAurelio.AudioSystem;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class PlayerCameraController : MonoBehaviour
     [SerializeField] CinemachineCamera cinemachineCamera;
     [SerializeField] CinemachineCameraOffset cinemachineCameraOffset;
     [SerializeField] CinemachineInputAxisController cinemachineInputAxisController;
+    [SerializeField] PlayAudioEvent footstepAudio;
 
     [Header("Movement Tilt Settings")]
     [SerializeField] float movementTiltAngle = 3f;
@@ -37,6 +39,7 @@ public class PlayerCameraController : MonoBehaviour
     Coroutine _applyFovMultiplierRoutine;
 
     float _headBobbingTimer;
+    bool _hasPlayedFootstep;
 
     void Awake ()
     {
@@ -106,6 +109,7 @@ public class PlayerCameraController : MonoBehaviour
 
     void ApplyHeadBobbing ()
     {
+        // footstepAudio.PlayAudio();
         if (!_characterController.IsGrounded)
         {
             ResetHeadBobbingPosition();
@@ -121,9 +125,18 @@ public class PlayerCameraController : MonoBehaviour
         _headBobbingTimer += Time.deltaTime;
         float horizontalOffset = offsetHorizontalHeadMovement ? headBobFrequency * 0.5f : 0;
 
-        float targetYOffset = Mathf.Sin(_headBobbingTimer * headBobFrequency) * headBobVerticalAmplitude;
-        float targetXOffset =
-            Mathf.Sin((_headBobbingTimer + horizontalOffset) * headBobFrequency * 0.5f) * headBobHorizontalAmplitude;
+        float sinValue = Mathf.Sin(_headBobbingTimer * headBobFrequency);
+        float targetYOffset = sinValue * headBobVerticalAmplitude;
+        float targetXOffset = Mathf.Sin((_headBobbingTimer + horizontalOffset) * headBobFrequency * 0.5f) *
+                              headBobHorizontalAmplitude;
+        
+        if (sinValue <= -0.98f && !_hasPlayedFootstep)
+        {
+            footstepAudio.PlayAudio();
+            _hasPlayedFootstep = true;
+        }
+        else if (sinValue > 0f)
+            _hasPlayedFootstep = false;
         
         cinemachineCameraOffset.Offset.y = Mathf.MoveTowards(
             cinemachineCameraOffset.Offset.y,

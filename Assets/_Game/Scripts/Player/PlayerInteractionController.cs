@@ -25,6 +25,7 @@ public class PlayerInteractionController : MonoBehaviour
         if (_player.CanAct)
         {
             _currentInteractable.Interact();
+            _player.CharacterController.ResetSpeed();
             GameManager.Instance.SetInteractHudActive(false);
         }
         else

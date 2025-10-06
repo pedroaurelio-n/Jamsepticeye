@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using PedroAurelio.AudioSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class PCUpgrades : MonoBehaviour
 {
     [field: SerializeField] public List<PCUpgradeEntry> AvailableUpgrades { get; private set; }
+
+    [SerializeField] PCUpgradeData storageUpgradeData;
+    [SerializeField] PlayAudioEvent buyAudio;
+    [SerializeField] PlayAudioEvent failureAudio;
 
     public int PCIndex => _minigameManager.PCIndex;
     
@@ -31,15 +36,19 @@ public class PCUpgrades : MonoBehaviour
         int index = entry.CurrentIndex;
         
         float currentValue = GetCurrentValue(entry);
-        if (currentValue >= data.MaxLimit)
+        if (index >= data.MaxLimit)
             return false;
         
         int cost = GetNextCost(type, _minigameManager.PCIndex);
         if (!GameManager.Instance.TryModifyCredits(-cost))
+        {
+            failureAudio.PlayAudio();
             return false;
+        }
         
         ApplyUpgrade(data);
         entry.CurrentIndex++;
+        buyAudio.PlayAudio();
         return true;
     }
     
@@ -55,6 +64,7 @@ public class PCUpgrades : MonoBehaviour
                 break;
             case PCUpgradeType.AutoMove:
                 _minigameManager.EnableAutoMove();
+                AvailableUpgrades.Add(new PCUpgradeEntry(storageUpgradeData));
                 break;
             case PCUpgradeType.DeathValue:
                 _minigameManager.UpgradeDeathValue(data.Value);

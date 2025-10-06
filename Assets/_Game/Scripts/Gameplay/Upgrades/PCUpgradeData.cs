@@ -16,12 +16,20 @@ public class PCUpgradeEntry
 {
     [field: SerializeField] public PCUpgradeData PCUpgradeData { get; private set; }
     [field: SerializeField] public int CurrentIndex { get; set; }
+
+    public PCUpgradeEntry (PCUpgradeData data)
+    {
+        PCUpgradeData = data;
+        CurrentIndex = 0;
+    }
 }
 
 [CreateAssetMenu(menuName = "Game/UpgradeData")]
 public class PCUpgradeData : ScriptableObject
 {
     [field: SerializeField] public string UpgradeName { get; private set; }
+    [field: SerializeField] public string UpgradeDescription { get; private set; }
+    [field: SerializeField] public string ParanoiaDescription { get; private set; }
     [field: SerializeField] public PCUpgradeType Type { get; private set; }
     [field: SerializeField] public int BaseCost { get; private set; }
     [field: SerializeField] public float Value { get; private set; }

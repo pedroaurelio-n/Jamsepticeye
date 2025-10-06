@@ -10,9 +10,16 @@ public class MinigameHud : MonoBehaviour
     
     Coroutine _coroutine;
 
-    public void UpdateLocalCredits (int value)
+    public void UpdateLocalCredits (int value, int total, bool show)
     {
-        localCreditsText.text = value.ToString();
+        if (!show)
+        {
+            localCreditsText.gameObject.SetActive(false);
+            return;
+        }
+        
+        localCreditsText.gameObject.SetActive(true);
+        localCreditsText.text = $"$ {value}/{total}";
     }
 
     public void StartCountdown (float duration, Action callback)

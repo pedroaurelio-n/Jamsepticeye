@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: NewPCUpgrade
   m_EditorClassIdentifier: 
   <UpgradeName>k__BackingField: New PC
+  <UpgradeDescription>k__BackingField: 
+  <ParanoiaDescription>k__BackingField: 
   <Type>k__BackingField: 5
-  <BaseCost>k__BackingField: 800
+  <BaseCost>k__BackingField: 80
   <Value>k__BackingField: 0
-  <Multiplier>k__BackingField: 2
+  <Multiplier>k__BackingField: 1.4
   <MaxLimit>k__BackingField: 25

@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: AutoMoveUpgrade
   m_EditorClassIdentifier: 
   <UpgradeName>k__BackingField: Auto Move
+  <UpgradeDescription>k__BackingField: 
+  <ParanoiaDescription>k__BackingField: NO RESISTANCE
   <Type>k__BackingField: 2
-  <BaseCost>k__BackingField: 350
+  <BaseCost>k__BackingField: 40
   <Value>k__BackingField: 0
   <LocalMultiplier>k__BackingField: 0
-  <PCMultiplier>k__BackingField: 2.5
+  <PCMultiplier>k__BackingField: 1.3
   <MaxLimit>k__BackingField: 1

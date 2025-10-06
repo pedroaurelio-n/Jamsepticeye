@@ -1,19 +1,26 @@
-﻿using UnityEngine;
+﻿using PedroAurelio.AudioSystem;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PCController : MonoBehaviour, IInteractable
 {
     [SerializeField] bool starting;
-    [SerializeField] int BaseCreditsStorage;
+    [SerializeField] int baseCreditsStorage;
     
     [Header("References")]
+    [SerializeField] Animator animator;
     [SerializeField] MeshRenderer screenRenderer;
     [SerializeField] Material screenMaterialTemplate;
     [SerializeField] MinigameManager minigamePrefab;
     [SerializeField] Camera focusCamera;
     [SerializeField] PCUpgrades upgrades;
     [SerializeField] ShopPanelUI shopPanelUI;
+    [SerializeField] PlayAudioEvent turnOffAudio;
+    [SerializeField] PlayAudioEvent turnOnAudio;
     
+    public bool Starting => starting;
     public int LocalCredits { get; private set; }
+    public int Storage => baseCreditsStorage + _creditsStorageUpgrade;
     public bool Initialized { get; private set; }
     public int Index => _pcIndex;
 
@@ -28,14 +35,14 @@ public class PCController : MonoBehaviour, IInteractable
     {
         _pcIndex = index;
         
-        _renderTexture = new RenderTexture(128, 128, 16);
+        _renderTexture = new RenderTexture(192, 192, 16);
         _renderTexture.Create();
 
         Vector3 offset = GetMinigameOffset();
         
         _minigameInstance = Instantiate(minigamePrefab, offset, Quaternion.identity);
         _minigameInstance.gameObject.SetActive(true);
-        _minigameInstance.Setup(this);
+        _minigameInstance.Setup(this, true);
         upgrades.Setup(_minigameInstance);
         shopPanelUI.OnUpgradeBought += HandleUpgradeBought;
         
@@ -65,12 +72,23 @@ public class PCController : MonoBehaviour, IInteractable
         if (_isBeingInteracted)
             return;
         
+        if (!TutorialSequence2.Instance.IsCompleted)
+            TutorialSequence2.Instance.Trigger();
+        
+        turnOnAudio.PlayAudio();
+        GameManager.Instance.TryModifyCredits(RedeemCredits());
+        animator.SetBool("IsOpen", true);
         GameManager.Instance.SetPlayerState(true);
         focusCamera.gameObject.SetActive(true);
         _minigameInstance.SetControlledState(true);
         _isBeingInteracted = true;
         Cursor.lockState = CursorLockMode.Confined;
-        
+    }
+
+    public void ActivateShopCanvas ()
+    {
+        if (!TutorialSequence2.Instance.IsCompleted)
+            return;
         shopPanelUI.gameObject.SetActive(true);
         shopPanelUI.Setup(upgrades);
         Invoke(nameof(LateSetup), 0.1f);
@@ -84,17 +102,30 @@ public class PCController : MonoBehaviour, IInteractable
 
     public bool AddCredits (int amount)
     {
-        if (LocalCredits + amount >= BaseCreditsStorage + _creditsStorageUpgrade)
+        if (_minigameInstance.IsControlled)
+        {
+            if (!TutorialSequence3.Instance.IsCompleted)
+            {
+                TutorialSequence3.Instance.Trigger();
+                ActivateShopCanvas();
+            }
+            GameManager.Instance.TryModifyCredits(amount);
+            shopPanelUI.Setup(upgrades);
+            return true;
+        }
+        
+        if (LocalCredits + amount >= baseCreditsStorage + _creditsStorageUpgrade)
             return false;
         
         LocalCredits += amount;
-        LocalCredits = Mathf.Clamp(LocalCredits, 0, BaseCreditsStorage + _creditsStorageUpgrade);
+        LocalCredits = Mathf.Clamp(LocalCredits, 0, baseCreditsStorage + _creditsStorageUpgrade);
         return true;
     }
 
     public void UpgradeCreditsStorage (int amount)
     {
         _creditsStorageUpgrade += amount;
+        _minigameInstance.UpdateHud();
     }
 
     public int RedeemCredits ()
@@ -108,8 +139,12 @@ public class PCController : MonoBehaviour, IInteractable
     {
         if (!_isBeingInteracted)
             return;
+
+        if (!TutorialSequence4.Instance.IsCompleted)
+            return;
         
-        GameManager.Instance.TryModifyCredits(RedeemCredits());
+        turnOffAudio.PlayAudio();
+        
         _minigameInstance.Setup(this);
         GameManager.Instance.SetPlayerState(false);
         focusCamera.gameObject.SetActive(false);
@@ -117,6 +152,7 @@ public class PCController : MonoBehaviour, IInteractable
         _isBeingInteracted = false;
         Cursor.lockState = CursorLockMode.Locked;
         
+        animator.SetBool("IsOpen", false);
         shopPanelUI.gameObject.SetActive(false);
     }
 
@@ -124,8 +160,15 @@ public class PCController : MonoBehaviour, IInteractable
     {
         if (_minigameInstance == null)
             return;
+        
+        if (!TutorialSequence4.Instance.IsCompleted)
+        {
+            TutorialSequence4.Instance.Trigger();
+            ActivateShopCanvas();
+        }
+        
         _minigameInstance.UpdatePlayer();
-        shopPanelUI.Setup(upgrades);
+        ActivateShopCanvas();
     }
 
     void OnDestroy ()

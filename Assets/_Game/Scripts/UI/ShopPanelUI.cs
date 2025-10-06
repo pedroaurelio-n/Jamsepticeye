@@ -35,10 +35,11 @@ public class ShopPanelUI : MonoBehaviour
 
     void UpdateEntries ()
     {
+        bool paranoid = ParanoiaManager.Instance.TryTriggerParanoia();
         for (int i = 0; i < _activeEntries.Count; i++)
         {
             _activeEntries[i].gameObject.SetActive(true);
-            _activeEntries[i].Setup(_pcUpgrades, _pcUpgrades.AvailableUpgrades[i].PCUpgradeData.Type);
+            _activeEntries[i].Setup(_pcUpgrades, _pcUpgrades.AvailableUpgrades[i].PCUpgradeData.Type, paranoid);
         }
     }
 

@@ -13,7 +13,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] PCList pcList;
     
+    public bool Finished { get; set; }
     public int GlobalCredits { get; private set; }
+    public int GlobalDeaths { get; private set; }
     public int CurrentPCCount { get; private set; } = 1;
 
     void Awake ()
@@ -29,10 +31,7 @@ public class GameManager : MonoBehaviour
     void Update ()
     {
         if (Keyboard.current.digit0Key.wasPressedThisFrame)
-            TryModifyCredits(+100);
-        
-        if (Keyboard.current.digit9Key.wasPressedThisFrame)
-            BuyNewPC();
+            TryModifyCredits(+1000);
     }
 
     public bool TryModifyCredits (int value, bool passive = false)
@@ -43,6 +42,12 @@ public class GameManager : MonoBehaviour
         GlobalCredits += value;
         hud.UpdateCredits(GlobalCredits);
         return true;
+    }
+
+    public void IncreaseDeaths ()
+    {
+        GlobalDeaths++;
+        ParanoiaManager.Instance.UpdateParanoia(GlobalDeaths);
     }
 
     public void BuyNewPC ()

@@ -49,11 +49,16 @@ public class PlayerInputManager : MonoBehaviour
     void Move ()
     {
         _cameraController.SetCameraMovementActive(_player.CanMove);
-        
+        PlayerCharacterInputs inputs;
+
         if (!_player.CanMove)
+        {
+            inputs = new PlayerCharacterInputs();
+            _characterController.SetInputs(ref inputs);
             return;
+        }
         
-        PlayerCharacterInputs inputs = new();
+        inputs = new PlayerCharacterInputs();
 
         Vector2 movement = _controls.Gameplay.Move.ReadValue<Vector2>();
         inputs.MoveForwardAxis = movement.y;

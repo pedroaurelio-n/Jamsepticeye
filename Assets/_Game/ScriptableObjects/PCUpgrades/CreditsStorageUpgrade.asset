@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e271082d38024b42a87adfd87e877634, type: 3}
   m_Name: CreditsStorageUpgrade
   m_EditorClassIdentifier: 
-  <UpgradeName>k__BackingField: Increase Storage
+  <UpgradeName>k__BackingField: +Storage
+  <UpgradeDescription>k__BackingField: 
+  <ParanoiaDescription>k__BackingField: MORE BODIES
   <Type>k__BackingField: 4
-  <BaseCost>k__BackingField: 100
+  <BaseCost>k__BackingField: 25
   <Value>k__BackingField: 50
-  <LocalMultiplier>k__BackingField: 1.7
-  <PCMultiplier>k__BackingField: 1.3
+  <LocalMultiplier>k__BackingField: 1.4
+  <PCMultiplier>k__BackingField: 1.1
   <MaxLimit>k__BackingField: 15

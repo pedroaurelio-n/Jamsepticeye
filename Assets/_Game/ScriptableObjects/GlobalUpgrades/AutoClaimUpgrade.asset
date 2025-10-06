@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: AutoClaimUpgrade
   m_EditorClassIdentifier: 
   <UpgradeName>k__BackingField: Auto Claim
+  <UpgradeDescription>k__BackingField: 
+  <ParanoiaDescription>k__BackingField: 
   <Type>k__BackingField: 1
-  <BaseCost>k__BackingField: 20000
+  <BaseCost>k__BackingField: 800
   <Value>k__BackingField: 0
   <Multiplier>k__BackingField: 0
   <MaxLimit>k__BackingField: 1

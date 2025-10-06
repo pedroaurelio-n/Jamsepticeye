@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e271082d38024b42a87adfd87e877634, type: 3}
   m_Name: SpawnDelayUpgrade
   m_EditorClassIdentifier: 
-  <UpgradeName>k__BackingField: Decrease Spawn
+  <UpgradeName>k__BackingField: -Spawn Delay
+  <UpgradeDescription>k__BackingField: 
+  <ParanoiaDescription>k__BackingField: MORE VICTIMS
   <Type>k__BackingField: 1
-  <BaseCost>k__BackingField: 15
-  <Value>k__BackingField: 0.1
-  <LocalMultiplier>k__BackingField: 1.6
+  <BaseCost>k__BackingField: 5
+  <Value>k__BackingField: 0.2
+  <LocalMultiplier>k__BackingField: 1.5
   <PCMultiplier>k__BackingField: 1
-  <MaxLimit>k__BackingField: 25
+  <MaxLimit>k__BackingField: 9

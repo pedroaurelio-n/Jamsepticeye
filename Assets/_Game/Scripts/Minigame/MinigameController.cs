@@ -1,3 +1,4 @@
+using PedroAurelio.AudioSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,8 @@ public class MinigameController : MonoBehaviour
     [SerializeField] LayerMask groundLayer;
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundCheckRadius = 0.2f;
+    [SerializeField] PlayAudioEvent jumpAudio;
+    [SerializeField] Animator animator;
     
     MinigameManager _manager;
     Rigidbody2D _rb;
@@ -43,7 +46,7 @@ public class MinigameController : MonoBehaviour
             else if (Keyboard.current.rightArrowKey.isPressed || Keyboard.current.dKey.isPressed)
                 _input.x = 1;
 
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            if (Keyboard.current.spaceKey.wasPressedThisFrame || Keyboard.current.wKey.wasPressedThisFrame || Keyboard.current.upArrowKey.isPressed)
                 _jumpInput = true;
 
             if (_input == Vector2.zero && _autoMove)
@@ -59,6 +62,8 @@ public class MinigameController : MonoBehaviour
         {
             _moveInput = Vector2.zero;
         }
+        
+        animator.SetBool("IsWalking", _moveInput != Vector2.zero && IsGrounded());
     }
 
     void FixedUpdate ()
@@ -69,7 +74,10 @@ public class MinigameController : MonoBehaviour
         
         if (_jumpInput && IsGrounded())
         {
+            _rb.linearVelocityY = 0;
             _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            if (_manager.IsControlled)
+                jumpAudio.PlayAudio();
         }
 
         _jumpInput = false;

@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e271082d38024b42a87adfd87e877634, type: 3}
   m_Name: DeathValueUpgrade
   m_EditorClassIdentifier: 
-  <UpgradeName>k__BackingField: Increase Death Value
+  <UpgradeName>k__BackingField: +Death Value
+  <UpgradeDescription>k__BackingField: 
+  <ParanoiaDescription>k__BackingField: SUFFER MORE
   <Type>k__BackingField: 3
-  <BaseCost>k__BackingField: 250
+  <BaseCost>k__BackingField: 15
   <Value>k__BackingField: 1
-  <LocalMultiplier>k__BackingField: 1.5
-  <PCMultiplier>k__BackingField: 1.25
+  <LocalMultiplier>k__BackingField: 1.3
+  <PCMultiplier>k__BackingField: 1.15
   <MaxLimit>k__BackingField: 14

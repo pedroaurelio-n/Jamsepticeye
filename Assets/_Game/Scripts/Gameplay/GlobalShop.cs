@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using PedroAurelio.AudioSystem;
+using UnityEngine;
 
 public class GlobalShop : MonoBehaviour, IInteractable
 {
     [SerializeField] GlobalShopPanelUI shopPanelUI;
     [SerializeField] Camera focusCamera;
+    [SerializeField] PlayAudioEvent turnOnAudio;
+    [SerializeField] PlayAudioEvent turnOffAudio;
     
     bool _isBeingInteracted;
 
@@ -17,6 +20,7 @@ public class GlobalShop : MonoBehaviour, IInteractable
         if (_isBeingInteracted)
             return;
         
+        turnOnAudio.PlayAudio();
         GameManager.Instance.SetPlayerState(true);
         focusCamera.gameObject.SetActive(true);
         _isBeingInteracted = true;
@@ -38,6 +42,7 @@ public class GlobalShop : MonoBehaviour, IInteractable
         if (!_isBeingInteracted)
             return;
         
+        turnOffAudio.PlayAudio();
         GameManager.Instance.SetPlayerState(false);
         focusCamera.gameObject.SetActive(false);
         _isBeingInteracted = false;

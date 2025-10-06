@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0faed6455c1f4475a6ddc1b9dee9943f, type: 3}
   m_Name: ManualPlayUpgrade
   m_EditorClassIdentifier: 
-  <UpgradeName>k__BackingField: Manual Multiplier
+  <UpgradeName>k__BackingField: Manual Bonus
+  <UpgradeDescription>k__BackingField: 
+  <ParanoiaDescription>k__BackingField: 
   <Type>k__BackingField: 2
-  <BaseCost>k__BackingField: 8000
+  <BaseCost>k__BackingField: 200
   <Value>k__BackingField: 5
-  <Multiplier>k__BackingField: 3
+  <Multiplier>k__BackingField: 1.75
   <MaxLimit>k__BackingField: 5

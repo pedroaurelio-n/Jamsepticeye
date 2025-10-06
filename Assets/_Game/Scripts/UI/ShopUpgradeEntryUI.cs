@@ -1,9 +1,10 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ShopUpgradeEntryUI : MonoBehaviour
+public class ShopUpgradeEntryUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public event Action OnUpgradeBought;
     
@@ -11,11 +12,16 @@ public class ShopUpgradeEntryUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] TextMeshProUGUI costText;
     [SerializeField] Button buyButton;
+    [SerializeField] Color availableColor;
+    [SerializeField] Color unavailableColor;
+    [SerializeField] GameObject tooltipObj;
+    [SerializeField] TextMeshProUGUI tooltipText;
     
     PCUpgrades _pcUpgrades;
     PCUpgradeType _type;
+    bool _paranoid;
 
-    public void Setup (PCUpgrades pcUpgrades, PCUpgradeType type)
+    public void Setup (PCUpgrades pcUpgrades, PCUpgradeType type, bool paranoid)
     {
         _pcUpgrades = pcUpgrades;
         _type = type;
@@ -23,10 +29,29 @@ public class ShopUpgradeEntryUI : MonoBehaviour
         buyButton.onClick.RemoveAllListeners();
         buyButton.onClick.AddListener(OnBuyButtonClicked);
 
+        _paranoid = paranoid;
         SyncEntryUI();
     }
     
-    public void ForceSync () => SyncEntryUI();
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        PCUpgradeEntry entry = _pcUpgrades.GetEntryByType(_type);
+        if (entry == null)
+            return;
+        
+        PCUpgradeData data = entry.PCUpgradeData;
+
+        string description = ParanoiaManager.Instance.TryTriggerParanoia()
+            ? data.ParanoiaDescription
+            : data.UpgradeDescription;
+        tooltipText.text = description;
+        tooltipObj.SetActive(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        tooltipObj.SetActive(false);
+    }
 
     void SyncEntryUI ()
     {
@@ -42,9 +67,11 @@ public class ShopUpgradeEntryUI : MonoBehaviour
         
         PCUpgradeData data = entry.PCUpgradeData;
         int level = entry.CurrentIndex;
+
+        string name = _paranoid ? data.ParanoiaDescription : data.UpgradeName;
+        nameText.text = name.ToUpper();
         
-        nameText.text = data.UpgradeName;
-        levelText.text = $"Lvl. {level}";
+        levelText.text = $"LVL.{level}";
         
         int nextCost = _pcUpgrades.GetNextCost(_type, _pcUpgrades.PCIndex);
 
@@ -56,7 +83,8 @@ public class ShopUpgradeEntryUI : MonoBehaviour
         }
         
         costText.text = $"${nextCost}";
-        buyButton.interactable = GameManager.Instance.GlobalCredits >= nextCost;
+        // buyButton.interactable = GameManager.Instance.GlobalCredits >= nextCost;
+        buyButton.image.color = GameManager.Instance.GlobalCredits >= nextCost ? availableColor : unavailableColor;
     }
 
     void OnBuyButtonClicked ()

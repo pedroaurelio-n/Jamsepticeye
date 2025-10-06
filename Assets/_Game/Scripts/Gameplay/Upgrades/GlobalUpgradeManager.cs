@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using PedroAurelio.AudioSystem;
 using UnityEngine;
 
 public class GlobalUpgradeManager : MonoBehaviour
 {
     [field: SerializeField] public List<GlobalUpgradeEntry> AvailableUpgrades { get; private set; }
+    [SerializeField] PlayAudioEvent buyAudio;
+    [SerializeField] PlayAudioEvent failureAudio;
+    [SerializeField] PlayAudioEvent newPcAudio;
+    [SerializeField] EndingSequence endingSequence;
 
     public float CostReducerPercent { get; private set; }
     public bool AutoClaimEnabled { get; private set; }
@@ -30,7 +35,10 @@ public class GlobalUpgradeManager : MonoBehaviour
         int cost = GetNextCost(data.Type);
 
         if (!GameManager.Instance.TryModifyCredits(-cost))
+        {
+            failureAudio.PlayAudio();
             return false;
+        }
 
         ApplyUpgrade(data);
         entry.CurrentIndex++;
@@ -43,6 +51,7 @@ public class GlobalUpgradeManager : MonoBehaviour
         {
             case GlobalUpgradeType.CostReducer:
                 CostReducerPercent += data.Value;
+                buyAudio.PlayAudio();
                 break;
             case GlobalUpgradeType.AutoClaim:
                 AutoClaimEnabled = true;
@@ -50,15 +59,23 @@ public class GlobalUpgradeManager : MonoBehaviour
                 break;
             case GlobalUpgradeType.ManualPlayBoost:
                 ManualPlayMultiplier += data.Value;
+                buyAudio.PlayAudio();
                 break;
             case GlobalUpgradeType.GlobalSpeed:
                 GlobalSpeedBoost += data.Value;
+                buyAudio.PlayAudio();
                 break;
             case GlobalUpgradeType.GlobalSpawnDelay:
                 GlobalSpawnDelayBoost += data.Value;
+                buyAudio.PlayAudio();
                 break;
             case GlobalUpgradeType.NewPC:
                 GameManager.Instance.BuyNewPC();
+                newPcAudio.PlayAudio();
+                break;
+            case GlobalUpgradeType.Salvation:
+                GameManager.Instance.Finished = true;
+                endingSequence.Trigger();
                 break;
         }
     }
